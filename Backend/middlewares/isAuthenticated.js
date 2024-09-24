@@ -16,6 +16,9 @@ exports.isAuthenticated = async(req,res,next)=>{
         next();
     } catch (error) {
         console.log(error.message)
-        console.log("Something Went Wrong While Authentication");
+        return res.status(400).json({
+            success : false  ,
+            message : "Something Went Wrong While Authentication",
+        })
     }
 }
