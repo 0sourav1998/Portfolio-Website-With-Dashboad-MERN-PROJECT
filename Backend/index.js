@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser");
 const expressFileUploader = require("express-fileupload");
 const messageRouter = require("./routes/message")
 const userRouter = require("./routes/user")
+const resetPasswordRouter = require("./routes/resetPassword")
 
 
 require("dotenv").config() ;
@@ -25,6 +26,7 @@ app.use(cors({
 
 app.use("/api/v1/message",messageRouter)
 app.use("/api/v1/user",userRouter)
+app.use("/api/v1/user/resetPassword",resetPasswordRouter)
 
 cloudinaryConfig();
 connectionToDB();

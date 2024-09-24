@@ -40,7 +40,7 @@ const userSchema = new mongoose.Schema({
     facebookUrl : String ,
     instagramUrl : String ,
     resetPasswordToken  : String ,
-    resetPasswordExpire : Date
+    resetPasswordExpires : Date
 })
 
 module.exports = mongoose.model("User",userSchema)

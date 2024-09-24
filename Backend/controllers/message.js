@@ -46,7 +46,7 @@ exports.getAllMessages = async(req,res)=>{
 exports.deleteMessage = async(req,res)=>{
     try {
         const {messageId} = req.body ;
-        if(messageId){
+        if(!messageId){
             return res.status(404).json({
                 success : false ,
                 message : "Message Not Found"
