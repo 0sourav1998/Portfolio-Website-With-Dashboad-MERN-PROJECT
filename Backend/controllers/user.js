@@ -168,7 +168,6 @@ exports.editProfile = async (req, res) => {
     } = req.body;
     const user = await User.findById(userId);
     if (req?.files && req.files.image) {
-      console.log("Inside this");
       const { image } = req.files;
       const cloudinaryImage = await uploadImageToCloudinary(image);
       if (cloudinaryImage) {
@@ -176,7 +175,6 @@ exports.editProfile = async (req, res) => {
       }
     }
     if (req?.files && req.files.resume) {
-      console.log("Inside this 2");
       const { resume } = req.files;
       const cloudinaryResume = await uploadImageToCloudinary(resume);
       if (cloudinaryResume) {
