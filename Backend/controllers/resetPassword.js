@@ -15,14 +15,14 @@ exports.generatePasswordToken = async(req,res)=>{
             })
         }
         console.log("Outside")
-        const token = crypto.randomUUID().toString();
+        const resetToken = crypto.randomUUID().toString();
         console.log("Inside")
         await User.findByIdAndUpdate(user._id , {
-            resetPasswordToken : token ,
+            resetPasswordToken : resetToken ,
             resetPasswordExpires : Date.now() + 5*60*1000
         } , {new : true});
         console.log("outside")
-        const url = `http://localhost:5173/update-password/${token}`
+        const url = `http://localhost:5173/update-password/${resetToken}`
         console.log("URL",url)
         await sendMail(
             email ,
@@ -30,8 +30,9 @@ exports.generatePasswordToken = async(req,res)=>{
             `Your Link for email verification is \n \n ${url}. \n \n Please click this url to reset your password.`
         )
         return res.status(200).json({
-            success: false ,
-            message : "Email Sent Successfully"
+            success: true ,
+            message : "Email Sent Successfully",
+            resetToken
         })
     } catch (error) {
         console.log(error.message)
@@ -45,6 +46,7 @@ exports.generatePasswordToken = async(req,res)=>{
 exports.resetPassword = async(req,res)=>{
     try {
         const {token,password,confirmPassword} = req.body;
+        console.log(token,password,confirmPassword)
         if(!token || !password || !confirmPassword){
             return res.status(400).json({
                 success : false ,
@@ -77,7 +79,7 @@ exports.resetPassword = async(req,res)=>{
         user.password = hashedPassword ;
         await user.save();
         return res.status(200).json({
-            success : false ,
+            success : true ,
             message : "Password Updated"
         })
     } catch (error) {

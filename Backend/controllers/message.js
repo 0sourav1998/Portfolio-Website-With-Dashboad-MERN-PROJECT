@@ -45,17 +45,20 @@ exports.getAllMessages = async(req,res)=>{
 
 exports.deleteMessage = async(req,res)=>{
     try {
-        const {messageId} = req.body ;
+        const messageId = req.params.id ;
+        console.log(messageId)
         if(!messageId){
             return res.status(404).json({
                 success : false ,
                 message : "Message Not Found"
             })
         }
-        await Message.findByIdAndDelete(messageId);
+        const deletedMsg = await Message.findByIdAndDelete(messageId);
+        console.log(deletedMsg)
         return res.status(200).json({
             success : true ,
-            message : "Message Deleted"
+            message : "Message Deleted" ,
+            deletedMsg
         })
     } catch (error) {
         return res.status(400).json({

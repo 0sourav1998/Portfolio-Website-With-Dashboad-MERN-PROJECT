@@ -7,6 +7,7 @@ require("dotenv").config();
 exports.addSkill = async (req, res) => {
   try {
     const { title, proficiency } = req.body;
+    console.log(title, proficiency)
     if (!title || !proficiency) {
       return res.status(400).json({
         success: false,
@@ -14,8 +15,10 @@ exports.addSkill = async (req, res) => {
       });
     }
     let cloudinarySkill;
+    console.log(res.files)
     if (req.files) {
       const image = req.files.skillImage;
+      console.log(image)
       cloudinarySkill = await uploadImageToCloudinary(
         image,
         process.env.PORTFOLIO_SKILL_FOLDER

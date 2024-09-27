@@ -17,7 +17,7 @@ exports.addTool = async(req,res)=>{
         })
         return res.status(201).json({
             success : true ,
-            message : "Tool Created" ,
+            message : "Tool Added" ,
             createdTool
         })
     } catch (error) {

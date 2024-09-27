@@ -111,6 +111,8 @@ exports.login = async (req, res) => {
         .json({
           success: true,
           message: "User Logged In",
+          token ,
+          user
         });
     } else {
       return res.status(400).json({
@@ -166,7 +168,7 @@ exports.editProfile = async (req, res) => {
       facebookUrl,
       instagramUrl,
     } = req.body;
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).select("-password");
     if (req?.files && req.files.image) {
       const { image } = req.files;
       const cloudinaryImage = await uploadImageToCloudinary(image);
@@ -212,9 +214,10 @@ exports.editProfile = async (req, res) => {
       user.twitterUrl = twitterUrl;
     }
     await user.save();
+    console.log("USER",user)
     return res.status(200).json({
       success: true,
-      message: "Profile Edited",
+      message: "Profile Updated",
       user,
     });
   } catch (error) {
@@ -229,6 +232,7 @@ exports.editProfile = async (req, res) => {
 exports.updatePassword = async (req, res) => {
   try {
     const { currentPassword, newPassword, confirmNewPassword } = req.body;
+    console.log(currentPassword,newPassword,confirmNewPassword)
     if (!currentPassword || !newPassword || !confirmNewPassword) {
       return res.status(400).json({
         success: false,
