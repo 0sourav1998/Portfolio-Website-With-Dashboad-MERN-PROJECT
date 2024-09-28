@@ -63,6 +63,7 @@ const AddSkill = () => {
               <Input
                 onChange={(e) => setInput({ ...input, title: e.target.value })}
                 type="text"
+                placeholder="Enter Title"
                 value={input.title}
                 className="w-full p-2 outline-none focus-within:ring-2 focus-within:ring-blue-500"
               />
@@ -75,6 +76,7 @@ const AddSkill = () => {
                 onChange={(e) =>
                   setInput({ ...input, proficiency: e.target.value })
                 }
+                placeholder="How Much Proficient You Are?"
                 value={input.proficiency}
                 type="number"
                 className="w-full p-2 outline-none focus-within:ring-2 focus-within:ring-blue-500"

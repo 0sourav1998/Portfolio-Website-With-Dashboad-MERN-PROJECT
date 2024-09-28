@@ -31,7 +31,8 @@ exports.addTool = async(req,res)=>{
 
 exports.deleteTool = async(req,res)=>{
     try {
-        const {id} = req.body ;
+        const {id} = req.params ;
+        console.log(id)
         const deletedTool = await Tool.findByIdAndDelete(id);
         return res.status(200).json({
             success : true ,

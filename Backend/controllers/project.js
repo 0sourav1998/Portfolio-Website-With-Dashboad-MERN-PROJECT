@@ -69,6 +69,7 @@ exports.updateProject = async (req, res) => {
       });
     }
     let cloudinaryProject;
+    console.log(req.files)
     if (req.files && req.files.projectImage) {
       const { projectImage } = req.files;
       cloudinaryProject = await uploadImageToCloudinary(projectImage);
@@ -115,7 +116,7 @@ exports.updateProject = async (req, res) => {
 
 exports.deleteProject = async (req, res) => {
   try {
-    const { id } = req.body;
+    const { id } = req.params;
     const deletedProject = await Project.findByIdAndDelete(id);
     return res.status(200).json({
       success: true,

@@ -4,7 +4,7 @@ const { addProject, deleteProject, showAll, getSpecific, updateProject } = requi
 const router = express.Router();
 
 router.post("/add",isAuthenticated,addProject);
-router.delete("/delete",isAuthenticated,deleteProject);
+router.delete("/delete/:id",isAuthenticated,deleteProject);
 router.put("/update/project",isAuthenticated,updateProject)
 router.get("/getAll",showAll)
 router.post("/getSpecific",isAuthenticated,getSpecific)

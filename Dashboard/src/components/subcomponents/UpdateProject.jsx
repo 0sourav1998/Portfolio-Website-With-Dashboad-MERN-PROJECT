@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
-import { Button } from "../ui/button";
 import {
   Select,
   SelectContent,
@@ -9,13 +12,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import axios from "axios";
 import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
 
-const AddProject = () => {
+const UpdateProject = () => {
+  const { id } = useParams();
   const [loading, setLoading] = useState(false);
-  const { token } = useSelector((state) => state.admin);
+  const imageRef = useRef();
+  const navigate = useNavigate();
   const [input, setInput] = useState({
     title: "",
     description: "",
@@ -25,10 +28,13 @@ const AddProject = () => {
     technologies: "",
     stack: "",
     projectImage: null,
+    projectBanner: null,
   });
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
+  const { token } = useSelector((state) => state.admin);
+
+  const handleSubmit = async() => {
+    const formData =  new FormData();
+    formData.append("id",id)
     formData.append("title", input.title);
     formData.append("description", input.description);
     formData.append("deployed", input.deployed);
@@ -38,46 +44,91 @@ const AddProject = () => {
     formData.append("gitRepoLink", input.gitRepoLink);
     formData.append("projectImage", input.projectImage);
     try {
-      setLoading(true);
-      const response = await axios.post(
-        "http://localhost:4000/api/v1/project/add",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        setLoading(true);
+        const response = await axios.put("http://localhost:4000/api/v1/project/update/project",formData,{
+            headers : {
+                Authorization : `Bearer ${token}`
+            }
+        })
+        if(response?.data?.success){
+            navigate("/")
+            toast.success(response?.data?.message);
         }
-      );
-      if (response.data.success) {
-        toast.success(response?.data?.message);
-        setInput({
-          title: "",
-          description: "",
-          gitRepoLink: "",
-          deployedLink: "",
-          deployed: "",
-          technologies: "",
-          stack: "",
-          projectImage: null,
-        });
-      }
     } catch (error) {
-      toast.error(error.response.data.message);
+        toast.error(error?.response?.data?.message)
     }finally{
-      setLoading(false)
+        setLoading(false)
     }
   };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+        setInput((prevInput) => ({
+            ...prevInput,
+            projectImage: file,
+            projectBanner: reader.result,
+          }));
+        };
+      };
+
+  const fetchProject = async () => {
+    const response = await axios.post(
+      "http://localhost:4000/api/v1/project/getSpecific",
+      { id: id },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    if (response?.data?.success) {
+      console.log(response);
+      setInput({
+        title: response?.data?.project?.title,
+        description: response?.data?.project?.description,
+        stack: response?.data?.project?.stack,
+        technologies: response?.data?.project?.technologies,
+        gitRepoLink: response?.data?.project?.gitRepoLink,
+        deployed: response?.data?.project?.deployed,
+        deployedLink: response?.data?.project?.deployedLink,
+        projectImage: response?.data?.project?.projectImage,
+        projectBanner : response?.data?.project?.projectImage
+      });
+    }
+  };
+
+  useEffect(() => {
+    fetchProject();
+  }, [id]);
+
   return (
-    <div>
-      <div className="w-full h-screen flex flex-col justify-center items-center mt-36">
+    <div className="mt-56">
+      <div className="w-full h-screen flex flex-col justify-center items-center">
         <div className="w-[60%] p-6 bg-gray-200 rounded-md shadow-lg">
           <div>
             <h1 className="text-3xl text-gray-600 font-bold text-center">
-              Add Project
+              Edit Project
             </h1>
           </div>
-          <form className="flex flex-col gap-4 mt-4" onSubmit={handleSubmit}>
+          <div className="flex flex-col gap-4 mt-4">
             <div className="flex flex-col gap-1">
+              <div className="w-full flex flex-col gap-6 justify-center">
+                <img
+                  src={input.projectBanner}
+                  className="w-60 h-36 mx-auto "
+                  alt="Banner-Image"
+                />
+                <input
+                  type="file"
+                  onChange={handleFileChange}
+                  className="hidden"
+                  ref={imageRef}
+                />
+                <button className="bg-blue-500 p-2 text-white rounded-md hover:bg-blue-700 transition-all duration-200" onClick={()=>imageRef.current.click()}>Upload Image</button>
+              </div>
               <Label className="text-lg font-semibold text-gray-600">
                 Title
               </Label>
@@ -99,19 +150,6 @@ const AddProject = () => {
                 }
                 value={input.description}
                 placeholder="Enter Project Description"
-                className="w-full p-2 outline-none focus-within:ring-2 focus-within:ring-blue-500"
-              />
-            </div>
-            <div className="flex flex-col gap-1">
-              <Label className="text-lg font-semibold text-gray-600">
-                Project Banner
-              </Label>
-              <Input
-                onChange={(e) =>
-                  setInput({ ...input, projectImage: e.target.files[0] })
-                }
-                type="file"
-                value={input.projectImage ? "" : null}
                 className="w-full p-2 outline-none focus-within:ring-2 focus-within:ring-blue-500"
               />
             </div>
@@ -187,12 +225,12 @@ const AddProject = () => {
                 className="w-full p-2 outline-none focus-within:ring-2 focus-within:ring-blue-500"
               />
             </div>
-            <Button type="submit">{loading ? "Loading..." : "Submit"}</Button>
-          </form>
+            <Button onClick={handleSubmit}>{loading ? "Loading..." : "Submit"}</Button>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default AddProject;
+export default UpdateProject;

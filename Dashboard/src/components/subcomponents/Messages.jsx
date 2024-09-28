@@ -46,7 +46,7 @@ const Messages = () => {
   }, [allMessages]);
 
   return (
-    <div className="min-h-screen bg-gray-50 py-10 px-5 ml-12">
+    <div className="min-h-screen bg-gray-50 py-10 px-5">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-800 mb-6">All Messages</h1>
         <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6">

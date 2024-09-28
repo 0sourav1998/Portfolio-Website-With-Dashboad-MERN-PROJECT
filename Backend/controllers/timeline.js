@@ -26,7 +26,7 @@ exports.addTimeline = async (req, res) => {
 
 exports.deleteTimeline = async (req, res) => {
   try {
-    const { id } = req.body;
+    const { id } = req.params;
     const deletedTimeline = await Timeline.findByIdAndDelete(id);
     return res.status(200).json({
       success: true,

@@ -59,6 +59,7 @@ const AddApplication = () => {
             <Input
               onChange={(e) => setInput({ ...input, name: e.target.value })}
               type="text"
+              placeholder = "Add Application Name"
               value={input.title}
               className="w-full p-2 outline-none focus-within:ring-2 focus-within:ring-blue-500"
             />

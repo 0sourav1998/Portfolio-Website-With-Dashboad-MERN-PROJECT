@@ -45,7 +45,8 @@ exports.addSkill = async (req, res) => {
 
 exports.deleteSkill = async (req, res) => {
   try {
-    const { id } = req.body;
+    const { id } = req.params;
+    console.log(id)
     if (!id) {
       return res.status(400).json({
         success: false,
@@ -69,22 +70,33 @@ exports.deleteSkill = async (req, res) => {
 
 exports.updateSkill = async (req, res) => {
   try {
-    const { proficiency, id } = req.body;
-    if (!proficiency || !id) {
-      return res.status(400).json({
-        success: false,
-        message: "These Fields Required",
-      });
+    const { title , proficiency, id } = req.body;
+    // console.log(title,skillImage , proficiency, id)
+    const skill = await Skill.findById(id);
+    if(!skill){
+      return res.status(404).json({
+        success : false ,
+        message : "Skill not Found"
+      })
     }
-    const updatedSkill = await Skill.findByIdAndUpdate(
-      id,
-      { proficiency: proficiency },
-      { new: true }
-    );
+    if(title){
+      skill.title = title
+    }
+    if(proficiency){
+      skill.proficiency = proficiency
+    }
+
+    if(req?.files){
+      const {skillImage} = req?.files
+      let Response = await uploadImageToCloudinary(skillImage,process.env.PORTFOLIO_SKILL_FOLDER);
+      skill.skillImage = Response.secure_url;
+      console.log(skill?.skillImage)
+    }
+    await skill.save();
     return res.status(201).json({
       success: true,
       message: "Skill Updated",
-      updatedSkill,
+      skill,
     });
   } catch (error) {
     console.log(error.message);
@@ -102,6 +114,26 @@ exports.getAll = async (req, res) => {
       success: true,
       message: "Skill Fetched Successfully",
       getAllSkill,
+    });
+  } catch (error) {
+    console.log(error.message);
+    return res.status(400).json({
+      success: false,
+      message: "Something Went Wrong While Fetching Skills",
+    });
+  }
+};
+
+
+exports.getSpecific = async (req, res) => {
+  try {
+    const {id} = req.params ;
+    console.log(id)
+    const getSkill = await Skill.findById(id);
+    return res.status(200).json({
+      success: true,
+      message: "Skill Fetched Successfully",
+      getSkill,
     });
   } catch (error) {
     console.log(error.message);

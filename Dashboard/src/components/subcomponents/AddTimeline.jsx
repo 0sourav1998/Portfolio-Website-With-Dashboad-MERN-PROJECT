@@ -55,6 +55,7 @@ const AddTimeline = () => {
             <Input
               onChange={(e) => setInput({ ...input, title: e.target.value })}
               type="text"
+              placeholder="Add Title"
               value={input.title}
               className="w-full p-2 outline-none focus-within:ring-2 focus-within:ring-blue-500"
             />
@@ -67,6 +68,7 @@ const AddTimeline = () => {
               onChange={(e) =>
                 setInput({ ...input, description: e.target.value })
               }
+              placeholder="Add Description"
               value={input.description}
               className="w-full p-2 outline-none focus-within:ring-2 focus-within:ring-blue-500"
             />
@@ -76,6 +78,7 @@ const AddTimeline = () => {
             <Input
               onChange={(e) => setInput({ ...input, from: e.target.value })}
               value={input.from}
+              placeholder="When You Started"
               type="number"
               className="w-full p-2 outline-none focus-within:ring-2 focus-within:ring-blue-500"
             />
@@ -85,6 +88,7 @@ const AddTimeline = () => {
             <Input
               onChange={(e) => setInput({ ...input, to: e.target.value })}
               value={input.to}
+              placeholder="When It Ends"
               type="number"
               className="w-full p-2 outline-none focus-within:ring-2 focus-within:ring-blue-500"
             />
