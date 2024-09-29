@@ -68,12 +68,6 @@ exports.updateProject = async (req, res) => {
         message: "This Field is Required",
       });
     }
-    let cloudinaryProject;
-    console.log(req.files)
-    if (req.files && req.files.projectImage) {
-      const { projectImage } = req.files;
-      cloudinaryProject = await uploadImageToCloudinary(projectImage);
-    }
     const project = await Project.findById(id);
     if (title) {
       project.title = title;
@@ -96,9 +90,13 @@ exports.updateProject = async (req, res) => {
     if (gitRepoLink) {
       project.gitRepoLink = gitRepoLink;
     }
-    if (req.files.projectImage) {
+    let cloudinaryProject;
+    if (req.files !== null && req.files.projectImage) {
+      const { projectImage } = req.files;
+      cloudinaryProject = await uploadImageToCloudinary(projectImage);
       project.projectImage = cloudinaryProject.secure_url;
     }
+
     await project.save();
     return res.status(200).json({
       success: true,

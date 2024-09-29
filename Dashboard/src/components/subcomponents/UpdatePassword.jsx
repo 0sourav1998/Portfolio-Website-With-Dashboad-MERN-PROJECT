@@ -33,8 +33,8 @@ const UpdatePassword = () => {
   
   return (
     <div>
-        <div className='flex flex-col gap-4'>
-          <h1 className='text-3xl font-bold'>Update Your Dashboard Password</h1>
+        <div className='w-full flex flex-col gap-4'>
+          <h1 className='sm:text-3xl text-sm font-bold'>Update Your Dashboard Password</h1>
           <div className='flex flex-col gap-4'>
             <Label>Enter Current Password</Label>
             <Input value={input.currentPassword} onChange={(e)=>setInput({...input,currentPassword : e.target.value})} placeholder="Enter the current Password" className="w-full p-2 rounded-md outline-none focus-within:ring-2 focus-within:ring-blue-500"/>
@@ -48,7 +48,7 @@ const UpdatePassword = () => {
             <Input value={input.confirmNewPassword} onChange={(e)=>setInput({...input, confirmNewPassword : e.target.value})} placeholder="Enter the current Password" className="w-full p-2 rounded-md outline-none focus-within:ring-2 focus-within:ring-blue-500"/>
           </div>
         </div>
-        <Button onClick={handlePasswordUpdate}>Submit</Button>
+        <Button className="mt-2" onClick={handlePasswordUpdate}>Submit</Button>
     </div>
   )
 }

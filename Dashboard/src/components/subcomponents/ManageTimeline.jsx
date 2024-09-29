@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Trash2 } from "lucide-react";
 import axios from "axios";
@@ -19,6 +19,7 @@ import { setAllTimelines } from "@/redux/slice/timelineSlice";
 const ManageTimeline = () => {
   const { allTimelines } = useSelector((state) => state.timeline);
   const { token } = useSelector((state) => state.admin);
+  const navigate = useNavigate()
   const dispatch = useDispatch();
   const handleDeleteTimeline = async (id) => {
     try {
@@ -42,7 +43,7 @@ const ManageTimeline = () => {
     }
   };
   return (
-    <div className="w-screen h-screen">
+    <div className="w-[98%] h-screen mt-2">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Manage Your Timeline</CardTitle>

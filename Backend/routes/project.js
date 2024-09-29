@@ -7,6 +7,6 @@ router.post("/add",isAuthenticated,addProject);
 router.delete("/delete/:id",isAuthenticated,deleteProject);
 router.put("/update/project",isAuthenticated,updateProject)
 router.get("/getAll",showAll)
-router.post("/getSpecific",isAuthenticated,getSpecific)
+router.post("/getSpecific",getSpecific)
 
 module.exports = router ;

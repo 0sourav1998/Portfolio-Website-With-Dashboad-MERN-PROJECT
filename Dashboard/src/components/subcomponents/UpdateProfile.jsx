@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Label } from "../ui/label";
-import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
@@ -9,13 +8,13 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 const UpdateProfile = () => {
-  const { user } = useSelector((state) => state?.admin);
+  const { user, token } = useSelector((state) => state?.admin);
   const imageRef = useRef();
   const resumeRef = useRef();
-  const [loading,setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-  const navigate = useNavigate()
-  const {token} = useSelector((state)=>state.admin)
+  const navigate = useNavigate();
+  
   const [input, setInput] = useState({
     fullName: "",
     email: "",
@@ -30,6 +29,7 @@ const UpdateProfile = () => {
     image: null,
     resume: null,
   });
+
   useEffect(() => {
     if (user) {
       setInput({
@@ -47,168 +47,164 @@ const UpdateProfile = () => {
         githubUrl: user.githubUrl || "",
       });
     }
-  }, []);
-  const handleSubmit = async()=>{
-      const formData = new FormData();
-      formData.append("fullName",input.fullName)
-      formData.append("email",input.email)
-      formData.append("phone",input.phone)
-      formData.append("aboutMe",input.aboutMe)
-      formData.append("portfolio",input.portfolio)
-      formData.append("githubUrl",input.githubUrl)
-      formData.append("linkedinUrl",input.linkedinUrl)
-      formData.append("facebookUrl",input.facebookUrl)
-      formData.append("instagramUrl",input.instagramUrl)
-      formData.append("twitterUrl",input.twitterUrl)
-      formData.append("image",input.image)
-      formData.append("resume",input.resume)
-      try {
-        setLoading(true)
-        const response = await axios.put("http://localhost:4000/api/v1/user/update/me",formData,{
-          headers : {
-            Authorization : `Bearer ${token}`
-          }
-        });
-        console.log(response)
-        if(response?.data?.success){
-          dispatch(setUser(response?.data?.user))
-          toast.success(response?.data?.message);
-          navigate("/")
-        }
-      } catch (error) {
-        console.log(error.response?.data?.message)
-        toast.error(error?.response?.data?.message)
-      }finally{
-        setLoading(false)
+  }, [user]);
+
+  const handleSubmit = async () => {
+    const formData = new FormData();
+    Object.entries(input).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+
+    try {
+      setLoading(true);
+      const response = await axios.put("http://localhost:4000/api/v1/user/update/me", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response?.data?.success) {
+        dispatch(setUser(response?.data?.user));
+        toast.success(response?.data?.message);
+        navigate("/");
       }
-  }
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="flex h-full flex-col gap-4">
-      <h1 className="text-xl font-bold">Personal Details</h1>
-      <div className="flex flex-row justify-around gap-6">
-        <div className="min-w-[30%]">
-          <Label className="text-sm">Full Name</Label>
+    <div className="w-full mx-auto sm:py-8 py-3 px-1 sm:px-6 bg-white rounded-lg ">
+      <h1 className="text-2xl font-bold text-gray-800 mb-6">Update Profile</h1>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div>
+          <Label className="block mb-2 text-sm">Full Name</Label>
           <input
             value={input.fullName}
-            onChange={(e)=>setInput({...input , fullName : e.target.value})}
+            onChange={(e) => setInput({ ...input, fullName: e.target.value })}
             type="text"
             placeholder="Enter Your Full Name"
-            className="w-full mt-2 outline-none focus-within:ring-2 focus-within:ring-blue-500 p-3 rounded-md"
+            className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
           />
         </div>
-        <div className="min-w-[30%]">
-          <Label className="text-sm">Email</Label>
+        <div>
+          <Label className="block mb-2 text-sm">Email</Label>
           <input
             type="email"
             value={input.email}
-            onChange={(e)=>setInput({...input , email : e.target.value})}
+            onChange={(e) => setInput({ ...input, email: e.target.value })}
             placeholder="Enter Your Email"
-            className="w-full mt-2 outline-none focus-within:ring-2 focus-within:ring-blue-500 p-3 rounded-md"
+            className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
           />
-        </div>
-        <div className="min-w-[30%]">
-          <Label className="text-sm">Phone Number</Label>
-          <input
-            value={input.phone}
-            onChange={(e)=>setInput({...input , phone : e.target.value})}
-            type="number"
-            placeholder="Enter Your Phone Number"
-            className="w-full mt-2 outline-none focus-within:ring-2 focus-within:ring-blue-500 p-3 rounded-md"
-          />
-        </div>
-      </div>
-      <div>
-        <Label>About Me</Label>
-        <textarea
-          value={input.aboutMe}
-          onChange={(e)=>setInput({...input , aboutMe : e.target.value})}
-          type="text"
-          placeholder="About Me"
-          className="w-full mt-2 outline-none focus-within:ring-2 focus-within:ring-blue-500 p-3 rounded-md"
-        />
-      </div>
-      <div className="flex gap-6">
-        <div className="max-w-[20%]">
-          <input ref={imageRef}  onChange={(e)=>setInput({...input,image : e?.target?.files[0]})} type="file" className="hidden" />
-          <Button onClick={()=>imageRef.current.click()} className="bg-blue-500 hover:bg-blue-600 transition-all duration-200">
-            Change Profile Picture
-          </Button>
-        </div>
-        <div className="max-w-[20%]">
-          <input ref={resumeRef}onChange={(e)=>setInput({...input, resume : e?.target?.files[0]})} type="file" className="hidden" />
-          <Button onClick={()=>resumeRef.current.click()} className="bg-blue-500 hover:bg-blue-600 transition-all duration-200">
-            Change Resume
-          </Button>
         </div>
         <div>
+          <Label className="block mb-2 text-sm">Phone Number</Label>
+          <input
+            value={input.phone}
+            onChange={(e) => setInput({ ...input, phone: e.target.value })}
+            type="number"
+            placeholder="Enter Your Phone Number"
+            className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div>
+          <Label className="block mb-2 text-sm">Portfolio</Label>
           <input
             value={input.portfolio}
-            onChange={(e)=>setInput({...input , portfolio : e.target.value})}
-            placeholder="Enter Your Portfolio Link"
+            onChange={(e) => setInput({ ...input, portfolio: e.target.value })}
             type="text"
-            className="w-[30vw] rounded-md p-2 outline-none focus-within:ring-2 focus-within:to-blue-500"
+            placeholder="Portfolio URL"
+            className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
           />
         </div>
       </div>
-      <hr />
-      <div className="flex flex-col mt-2">
-        <h1 className="text-xl font-bold mb-4">Social Media Links</h1>
-        <div className="flex flex-row justify-around gap-6">
-          <div className="min-w-[30%]">
-            <Label className="text-sm">Linkedin Url</Label>
-            <input
-              value={input.linkedinUrl}
-              onChange={(e)=>setInput({...input , linkedinUrl : e.target.value})}
-              type="text"
-              placeholder="Enter Your Linkedin Url"
-              className="w-full mt-2 outline-none focus-within:ring-2 focus-within:ring-blue-500 p-3 rounded-md"
-            />
-          </div>
-          <div className="min-w-[30%]">
-            <Label className="text-sm">Github Url</Label>
-            <input
-              value={input.githubUrl}
-              onChange={(e)=>setInput({...input , githubUrl : e.target.value})}
-              type="text"
-              placeholder="Enter Your Github Url"
-              className="w-full mt-2 outline-none focus-within:ring-2 focus-within:ring-blue-500 p-3 rounded-md"
-            />
-          </div>
-          <div className="min-w-[30%]">
-            <Label className="text-sm">Instagram Url</Label>
-            <input
-              value={input.instagramUrl}
-              onChange={(e)=>setInput({...input , instagramUrl : e.target.value})}
-              type="text"
-              placeholder="Enter Your Instagram Url"
-              className="w-full mt-2 outline-none focus-within:ring-2 focus-within:ring-blue-500 p-3 rounded-md"
-            />
-          </div>
+
+      <div className="mt-6">
+        <Label className="block mb-2 text-sm">About Me</Label>
+        <textarea
+          value={input.aboutMe}
+          onChange={(e) => setInput({ ...input, aboutMe: e.target.value })}
+          placeholder="Tell us about yourself"
+          className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      <div className="flex sm:flex-row flex-col items-center gap-4 mt-6">
+        <Button onClick={() => imageRef.current.click()} className="bg-blue-500 hover:bg-blue-600">
+          Change Profile Picture
+        </Button>
+        <input ref={imageRef} onChange={(e) => setInput({ ...input, image: e.target.files[0] })} type="file" className="hidden" />
+
+        <Button onClick={() => resumeRef.current.click()} className="bg-blue-500 hover:bg-blue-600">
+          Change Resume
+        </Button>
+        <input ref={resumeRef} onChange={(e) => setInput({ ...input, resume: e.target.files[0] })} type="file" className="hidden" />
+      </div>
+
+      <hr className="my-6" />
+
+      <h2 className="text-lg font-semibold text-gray-800 mb-4">Social Media Links</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div>
+          <Label className="block mb-2 text-sm">LinkedIn</Label>
+          <input
+            value={input.linkedinUrl}
+            onChange={(e) => setInput({ ...input, linkedinUrl: e.target.value })}
+            type="text"
+            placeholder="LinkedIn URL"
+            className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+          />
         </div>
-        <div className="flex flex-row gap-6">
-          <div className="max-w-[30%]">
-            <Label className="text-sm">Twitter(x) Url</Label>
-            <input
-              value={input.twitterUrl}
-              onChange={(e)=>setInput({...input , twitterUrl : e.target.value})}
-              type="text"
-              placeholder="Enter Your Twitter Url"
-              className="w-full mt-2 outline-none focus-within:ring-2 focus-within:ring-blue-500 p-3 rounded-md"
-            />
-          </div>
-          <div className="max-w-[30%]">
-            <Label className="text-sm">Facebook Url</Label>
-            <input
-              value={input.facebookUrl}
-              onChange={(e)=>setInput({...input , facebookUrl : e.target.value})}
-              type="text"
-              placeholder="Enter Your Facebook Url"
-              className="w-full mt-2 outline-none focus-within:ring-2 focus-within:ring-blue-500 p-3 rounded-md"
-            />
-          </div>
+        <div>
+          <Label className="block mb-2 text-sm">GitHub</Label>
+          <input
+            value={input.githubUrl}
+            onChange={(e) => setInput({ ...input, githubUrl: e.target.value })}
+            type="text"
+            placeholder="GitHub URL"
+            className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div>
+          <Label className="block mb-2 text-sm">Instagram</Label>
+          <input
+            value={input.instagramUrl}
+            onChange={(e) => setInput({ ...input, instagramUrl: e.target.value })}
+            type="text"
+            placeholder="Instagram URL"
+            className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div>
+          <Label className="block mb-2 text-sm">Twitter (X)</Label>
+          <input
+            value={input.twitterUrl}
+            onChange={(e) => setInput({ ...input, twitterUrl: e.target.value })}
+            type="text"
+            placeholder="Twitter URL"
+            className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div>
+          <Label className="block mb-2 text-sm">Facebook</Label>
+          <input
+            value={input.facebookUrl}
+            onChange={(e) => setInput({ ...input, facebookUrl: e.target.value })}
+            type="text"
+            placeholder="Facebook URL"
+            className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+          />
         </div>
       </div>
-      <Button onClick={handleSubmit} className="mb-6 w-fit">{loading ? "Loading..." : "Submit"}</Button>
+
+      <div className="flex justify-end mt-8">
+        <Button onClick={handleSubmit} className="bg-blue-500 hover:bg-blue-600 px-6 py-3">
+          {loading ? "Loading..." : "Submit"}
+        </Button>
+      </div>
     </div>
   );
 };

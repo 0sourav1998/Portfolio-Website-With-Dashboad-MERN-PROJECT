@@ -64,21 +64,21 @@ const Dashboard = () => {
     }
   };
   return (
-    <div className="flex flex-col gap-6 w-full">
-      <div className="flex gap-4 mt-5">
-        <div className="w-[50%] bg-white shadow-lg p-6">
+    <div className="flex flex-col gap-6 md:w-full w-[90%] mx-auto">
+      <div className="flex md:flex-row flex-col gap-4 mt-5">
+        <div className="sm:w-[50%] w-fit ml-10 md:ml-0 bg-white shadow-lg md:p-6 p-3">
           <div className="flex flex-col gap-4 w-full">
-            <h1 className="text-2xl font-bold">About Me</h1>
-            <span className="font-semibold text-gray-600 text-lg">
-              {user.aboutMe}
+            <h1 className="sm:text-2xl text-normal md:font-bold font-normal">About Me</h1>
+            <span className="font-semibold text-gray-600 md:text-sm lg:text-lg text-xs">
+              {user?.aboutMe}
             </span>
           </div>
         </div>
-        <div className="w-[20%] bg-white shadow-lg p-6">
+        <div className="md:w-[20%] w-[80%] ml-10 md:ml-0 bg-white shadow-lg md:p-6 p-3">
           <div className="flex flex-col gap-4 w-full">
-            <h1 className="text-2xl font-bold">My Projects</h1>
+            <h1 className="sm:text-2xl text-normal md:font-bold font-normal">My Projects</h1>
             <div className="flex justify-between">
-              <span className="font-semibold text-gray-600 text-lg">
+              <span className="font-semibold text-gray-600 md:text-lg text-xs">
                 {allProjects?.length}
               </span>
               <Link to="/manage/projects">
@@ -87,26 +87,31 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-        <div className="w-[28%] bg-white shadow-lg p-6">
+        <div className="md:w-[20%] w-[80%] ml-10 md:ml-0 bg-white shadow-lg md:p-6 p-3">
           <div className="flex flex-col gap-4 w-full">
-            <h1 className="text-2xl font-bold">My Skills</h1>
+            <h1 className="sm:text-2xl text-normal md:font-bold font-normal">My Skills</h1>
             <span className="font-semibold text-gray-600 text-lg">
               {allSkills?.length}
             </span>
           </div>
         </div>
       </div>
-      <Tabs>
-        <TabsContent>
-          <Table>
-            <TableCaption>List Of Your Projects</TableCaption>
+      <Card className="w-[85%] md:w-full md:ml-0 ml-9">
+        <CardHeader>
+          <CardTitle className="text-sm sm:text-lg">
+          List Of Your Projects
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Table className="sm:w-full w-full overflow-x-hidden p-3 md:p-0">
+            <TableCaption></TableCaption>
             <TableHeader>
               <TableRow>
                 <TableHead>Project Name</TableHead>
-                <TableHead>Stack</TableHead>
-                <TableHead>Deployed</TableHead>
-                <TableHead>Update</TableHead>
-                <TableHead>Visit</TableHead>
+                <TableHead className="hidden sm:table-cell">Stack</TableHead>
+                <TableHead className="hidden sm:table-cell">Deployed</TableHead>
+                <TableHead className="hidden sm:table-cell">Update</TableHead>
+                <TableHead className="text-right">Visit</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -114,12 +119,12 @@ const Dashboard = () => {
                 allProjects?.map((project) => (
                   <TableRow key={project._id}>
                     <TableCell>{project.title}</TableCell>
-                    <TableCell>{project.stack}</TableCell>
-                    <TableCell>{project.deployed}</TableCell>
-                    <TableCell>
+                    <TableCell className="hidden sm:table-cell">{project.stack}</TableCell>
+                    <TableCell className="hidden sm:table-cell">{project.deployed}</TableCell>
+                    <TableCell className="hidden sm:table-cell">
                       <Button onClick={()=>navigate(`project/update/${project._id}`)}>Update</Button>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="text-right">
                       <Button onClick={()=>navigate("/manage/projects")}>Visit</Button>
                     </TableCell>
                   </TableRow>
@@ -131,12 +136,12 @@ const Dashboard = () => {
               )}
             </TableBody>
           </Table>
-        </TabsContent>
-      </Tabs>
+        </CardContent>
+      </Card>
       <Tabs>
-        <Card>
-          <CardHeader className="flex flex-row justify-between">
-            <CardTitle>Skills</CardTitle>
+        <Card className="w-[85%] sm:w-full md:ml-0 ml-9">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle className="text-lg md:text-xl">Skills</CardTitle>
             <Link to="/manage/skill">
               <Button className="w-fit">Manage Skill</Button>
             </Link>
@@ -146,7 +151,7 @@ const Dashboard = () => {
               allSkills?.map((skill) => (
                 <Card key={skill._id}>
                   <CardHeader>
-                    <CardTitle>{skill?.title}</CardTitle>
+                    <CardTitle className="md:text-lg text-sm">{skill?.title}</CardTitle>
                   </CardHeader>
                   <CardFooter>
                     <Progress value={skill?.proficiency} />
@@ -159,11 +164,13 @@ const Dashboard = () => {
           </CardContent>
         </Card>
       </Tabs>
-      <div className="w-full flex justify-between items-center gap-4">
-        <Tabs className="min-w-[35vw]">
-          <TabsContent>
+      <div className="md:w-full w-fit flex md:flex-row flex-col justify-between items-center gap-4">
+        <Card className="sm:min-w-[35vw] w-[70%]">
+          <CardHeader>
+            <CardTitle  className="text-lg md:text-xl">List Of Software Applications</CardTitle>
+          </CardHeader>
+          <CardContent>
             <Table className="max-w-[100%]">
-              <TableCaption>List Of Software Applications</TableCaption>
               <TableHeader>
                 <TableRow>
                   <TableHead>Name</TableHead>
@@ -193,11 +200,11 @@ const Dashboard = () => {
                 )}
               </TableBody>
             </Table>
-          </TabsContent>
-        </Tabs>
-        <Card className="min-w-[50vw]">
-          <CardHeader className="flex flex-row justify-between">
-            <CardTitle>Timeline</CardTitle>
+          </CardContent>
+        </Card>
+        <Card className="sm:min-w-[50vw] w-[73%]">
+          <CardHeader className="flex sm:flex-row flex-col items-center justify-between">
+            <CardTitle className="text-sm sm:text-lg ">Timeline</CardTitle>
             <Link to="/manage/timeline">
             <Button className="w-fit">Manage Timeline</Button>
             </Link>

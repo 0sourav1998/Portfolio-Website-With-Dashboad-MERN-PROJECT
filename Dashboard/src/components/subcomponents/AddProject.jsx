@@ -68,17 +68,16 @@ const AddProject = () => {
     }
   };
   return (
-    <div>
-      <div className="w-full h-screen flex flex-col justify-center items-center mt-36">
-        <div className="w-[60%] p-6 bg-gray-200 rounded-md shadow-lg">
+      <div className="w-full h-auto flex flex-col justify-center items-center mb-4">
+        <div className="sm:w-[60%] w-fit p-6 bg-gray-200 rounded-md shadow-lg">
           <div>
-            <h1 className="text-3xl text-gray-600 font-bold text-center">
+            <h1 className="sm:text-3xl text-xl text-gray-600 font-bold text-center">
               Add Project
             </h1>
           </div>
-          <form className="flex flex-col gap-4 mt-4" onSubmit={handleSubmit}>
+          <form className="flex flex-col sm:gap-4 gap-1 mt-4" onSubmit={handleSubmit}>
             <div className="flex flex-col gap-1">
-              <Label className="text-lg font-semibold text-gray-600">
+              <Label className="sm:text-lg text-sm font-semibold text-gray-600">
                 Title
               </Label>
               <Input
@@ -90,7 +89,7 @@ const AddProject = () => {
               />
             </div>
             <div className="flex flex-col gap-1">
-              <Label className="text-lg font-semibold text-gray-600">
+              <Label className="sm:text-lg text-sm font-semibold text-gray-600">
                 Description
               </Label>
               <Input
@@ -103,7 +102,7 @@ const AddProject = () => {
               />
             </div>
             <div className="flex flex-col gap-1">
-              <Label className="text-lg font-semibold text-gray-600">
+              <Label className="sm:text-lg text-sm font-semibold text-gray-600">
                 Project Banner
               </Label>
               <Input
@@ -116,7 +115,7 @@ const AddProject = () => {
               />
             </div>
             <div className="flex flex-col gap-1">
-              <Label className="text-lg font-semibold text-gray-600">
+              <Label className="sm:text-lg text-sm font-semibold text-gray-600">
                 Github Repo Link
               </Label>
               <Input
@@ -130,7 +129,7 @@ const AddProject = () => {
               />
             </div>
             <div className="flex flex-col gap-1">
-              <Label className="text-lg font-semibold text-gray-600">
+              <Label className="sm:text-lg text-sm font-semibold text-gray-600">
                 Technologies Used In The Project
               </Label>
               <Input
@@ -144,7 +143,7 @@ const AddProject = () => {
               />
             </div>
             <div className="flex flex-col gap-1">
-              <Label className="text-lg font-semibold text-gray-600">
+              <Label className="sm:text-lg text-sm font-semibold text-gray-600">
                 Stack(MERN,MEAN,MEVN etc...)
               </Label>
               <Input
@@ -156,7 +155,7 @@ const AddProject = () => {
               />
             </div>
             <div className="flex flex-col gap-1">
-              <Label className="text-lg font-semibold text-gray-600">
+              <Label className="sm:text-lg text-sm font-semibold text-gray-600">
                 Is These Project Deployed
               </Label>
               <Select
@@ -174,7 +173,7 @@ const AddProject = () => {
               </Select>
             </div>
             <div className="flex flex-col gap-1">
-              <Label className="text-lg font-semibold text-gray-600">
+              <Label className="sm:text-lg text-sm font-semibold text-gray-600">
                 Deployed Link
               </Label>
               <Input
@@ -191,7 +190,6 @@ const AddProject = () => {
           </form>
         </div>
       </div>
-    </div>
   );
 };
 

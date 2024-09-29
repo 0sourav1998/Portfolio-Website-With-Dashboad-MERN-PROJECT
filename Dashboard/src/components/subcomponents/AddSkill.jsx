@@ -5,10 +5,12 @@ import { Label } from "../ui/label";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const AddSkill = () => {
   const [loading, setLoading] = useState(false);
   const { token } = useSelector((state) => state.admin);
+  const navigate = useNavigate();
   const [input, setInput] = useState({
     title: "",
     proficiency: "",
@@ -33,6 +35,7 @@ const AddSkill = () => {
       );
       if (response?.data?.success) {
         toast.success(response?.data?.message);
+        navigate("/")
         setInput({
           title: "",
           proficiency: "",
@@ -49,13 +52,11 @@ const AddSkill = () => {
   return (
     <div>
       <div className="w-full h-screen flex flex-col justify-center items-center">
-        <div className="w-[40%] p-6 bg-gray-200 rounded-md shadow-lg">
-          <div>
-            <h1 className="text-3xl text-gray-600 font-bold text-center">
+        <div className="sm:w-[60%] w-fit sm:p-6 p-3 bg-gray-200 rounded-md shadow-lg mr-4 sm:mr-0">
+            <h1 className="sm:text-3xl text-xl text-gray-600 font-bold text-center">
               Add Skill
             </h1>
-          </div>
-          <form className="flex flex-col gap-4 mt-4" onSubmit={handleSubmit}>
+          <form className="flex flex-col sm:gap-4 gap-1 mt-4" onSubmit={handleSubmit}>
             <div className="flex flex-col gap-1">
               <Label className="text-lg font-semibold text-gray-600">
                 Title

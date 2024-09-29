@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
-const ViewProject = () => {
+const ProjectView = () => {
   const { id } = useParams();
   const [input, setInput] = useState({
     title: "",
@@ -42,8 +42,8 @@ const ViewProject = () => {
   const technologiesInListFormat = input?.technologies?.split(",");
 
   return (
-    <div className="flex flex-col items-center py-12 bg-gray-100 min-h-screen">
-      <div className="w-11/12 lg:w-2/3 bg-white shadow-lg rounded-lg p-8">
+    <div className="flex flex-col items-center py-12 bg-slate-900 min-h-screen">
+      <div className="w-11/12 lg:w-2/3 bg-gray-200 shadow-lg rounded-lg p-8">
         <h1 className="text-4xl font-bold text-center mb-6">{input?.title}</h1>
         
         <img
@@ -95,7 +95,7 @@ const ViewProject = () => {
         )}
 
         <div className="text-center">
-          <Link to="/manage/projects" className="text-white bg-blue-600 px-6 py-2 rounded-lg hover:bg-blue-700">
+          <Link to="/" className="text-white bg-blue-600 px-6 py-2 rounded-lg hover:bg-blue-700">
             Back to Projects
           </Link>
         </div>
@@ -104,4 +104,4 @@ const ViewProject = () => {
   );
 };
 
-export default ViewProject;
+export default ProjectView;

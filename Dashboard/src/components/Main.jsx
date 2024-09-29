@@ -6,8 +6,8 @@ import { useSelector } from "react-redux";
 const Main = () => {
   const { user } = useSelector((state) => state.admin);
   return (
-    <div className="flex">
-      <div className="w-20">
+    <div className="flex gap-1 overflow-x-hidden">
+      <div className="w-[75px]">
         <Homepage />
       </div>
       <div className="flex-1">

@@ -47,7 +47,7 @@ const ManageSkill = () => {
 
   return (
     <div>
-      <Card>
+      <Card className="mt-2">
         <CardHeader className="flex flex-row justify-between">
           <CardTitle>Manage Your Skills</CardTitle>
           <Link to="/">
